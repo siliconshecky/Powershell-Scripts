@@ -1,3 +1,6 @@
+# This script will Find all users in an OU that have the Do Not Allow Logon to Terminal Sessions checkbox checked
+# Which prevents them from using RDP or Citrix
+
 Import-Module ActiveDirectory
 $out = @()
 $searchOU = "OU=Users,OU=whatever,DC=domain,DC=com"
