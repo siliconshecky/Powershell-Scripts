@@ -4,7 +4,7 @@
 Write-host "To select logs from the microsoft folder under Application and Services logs use the following format: Microsoft-Windows-Sysmon/Operational" -foregroundcolor magenta
 Write-Host "Output file names do not need an extention, just a name for the csv file." -foregroundcolor magenta
 Write-host "Date format should be mm/dd/yyyy. Single digit months do not need a 0 (ie 1 for Jan not 01)" -foregroundcolor magenta
-Write-host "Start and end date must be different days (i.e. 1/12/2018 to 1/12/2018 won't work but 1/11/2018 to 1/12/2018 will)" -foregroundcolor magenta
+Write-host "To search the current day do not enter an end date. Otherwise make sure there is a day between start and end dates" -foregroundcolor magenta
 Write-host "File path is the base, it will append the machine name (if there is one) plus tthe file name inputted" -foregroundcolor magenta
 Write-host "Separate multiple event Ids with a comma"
 #get inputs from user
@@ -25,6 +25,12 @@ If(!(test-path $path))
 }
 
 # Find the Event ID inside the Security Log and Output 
+If (!$DateEnd) {
+Get-WinEvent -ComputerName $MachineName -FilterHashtable @{Logname=$NameOfLog; ID=$EventID;StartTime=$DateStart}| 
+    select TimeCreated,ID,Message |
+    Export-CSV "$FilePath\$MachineName\$Filename.csv" }
+Else {
 Get-WinEvent -ComputerName $MachineName -FilterHashtable @{Logname=$NameOfLog; ID=$EventID;StartTime=$DateStart;EndTime=$DateEnd}| 
     select TimeCreated,ID,Message |
     Export-CSV "$FilePath\$MachineName\$Filename.csv"
+}
