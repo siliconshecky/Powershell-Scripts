@@ -5,7 +5,7 @@ Write-host "To select logs from the microsoft folder under Application and Servi
 Write-Host "Output file names do not need an extention, just a name for the csv file." -foregroundcolor magenta
 Write-host "Date format should be mm/dd/yyyy. Single digit months do not need a 0 (ie 1 for Jan not 01)" -foregroundcolor magenta
 Write-host "To search the current day do not enter an end date. Otherwise make sure there is a day between start and end dates" -foregroundcolor magenta
-Write-host "File path is the base, it will append the machine name (if there is one) plus tthe file name inputted" -foregroundcolor magenta
+Write-host "File path is the base, it will append the machine name (if there is one) plus the file name inputted" -foregroundcolor magenta
 Write-host "Separate multiple event Ids with a comma"
 #get inputs from user
 $NameOfLog = Read-Host -Prompt 'What Windows Log are we searching:'
