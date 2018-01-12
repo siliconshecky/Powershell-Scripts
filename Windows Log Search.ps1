@@ -15,10 +15,10 @@ $DateEnd = Read-Host -Prompt 'End Date' # date to end reading logs from
 $EventID = Read-Host -Prompt 'Event ID'
 $EventID = $EventID.Split(',')
 $Filename = Read-Host -Prompt 'Name of output file (csv extention is automatically added)'
-$Path = Read-Host -Prompt 'File Path'
+$FilePath = Read-Host -Prompt 'File Path'
 
 # Check to make sure the output path exists
-$path = "C:\Audits\$($MachineName)"
+$path = "$($FilePath)\$($MachineName)"
 If(!(test-path $path))
 {
       New-Item -ItemType Directory -Force -Path $path
@@ -27,4 +27,4 @@ If(!(test-path $path))
 # Find the Event ID inside the Security Log and Output 
 Get-WinEvent -ComputerName $MachineName -FilterHashtable @{Logname=$NameOfLog; ID=$EventID;StartTime=$DateStart;EndTime=$DateEnd}| 
     select TimeCreated,ID,Message |
-    Export-CSV "$Path\$MachineName\$Filename.csv"
+    Export-CSV "$FilePath\$MachineName\$Filename.csv"
