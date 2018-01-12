@@ -13,7 +13,7 @@ $MachineName = Read-Host -Prompt 'Please enter machine name or blank for local m
 $DateStart = Read-Host -Prompt 'Date to start from' # date to start reading logs from
 $DateEnd = Read-Host -Prompt 'End Date' # date to end reading logs from
 $EventID = Read-Host -Prompt 'Event ID'
-$EventID = $EventID.Split(',')
+$EventID = $EventID.Split(',') |  % {iex $_} #seperate multiple IDs into an array
 $Filename = Read-Host -Prompt 'Name of output file (csv extention is automatically added)'
 $FilePath = Read-Host -Prompt 'File Path'
 
@@ -24,13 +24,14 @@ If(!(test-path $path))
       New-Item -ItemType Directory -Force -Path $path
 }
 
-# Find the Event ID inside the Security Log and Output 
-If (!$DateEnd) {
+# Find the Event ID inside the Security Log and Output.For each loops enumerate multiple IDs. If statement checks for an end date and processes everything accordingly
+If (!$DateEnd) { Foreach ($ID in $EventID){
 Get-WinEvent -ComputerName $MachineName -FilterHashtable @{Logname=$NameOfLog; ID=$EventID;StartTime=$DateStart}| 
     select TimeCreated,ID,Message |
-    Export-CSV "$FilePath\$MachineName\$Filename.csv" }
+    Export-CSV "$FilePath\$MachineName\$Filename.csv" } } 
 Else {
+    Foreach ($ID in $EventID){
 Get-WinEvent -ComputerName $MachineName -FilterHashtable @{Logname=$NameOfLog; ID=$EventID;StartTime=$DateStart;EndTime=$DateEnd}| 
     select TimeCreated,ID,Message |
-    Export-CSV "$FilePath\$MachineName\$Filename.csv"
+    Export-CSV "$FilePath\$MachineName\$Filename.csv" }
 }
